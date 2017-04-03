@@ -20,8 +20,8 @@ set :sockets, Hash.new { |h, k| h[k] = [] }
 enable :sessions
 
 before do
-	key = '7JVBjxBKNm4oR9EuHdl62yr8I'
-	secret = 'eg1S2n40WTLf8S8klbwphZibW62sgZNiioocU8Dpm09Ky8SzBi'
+	key = ''
+	secret = ''
 	@twitter = TwitterOAuth::Client.new(
 		:consumer_key => key,
 		:consumer_secret => secret,
