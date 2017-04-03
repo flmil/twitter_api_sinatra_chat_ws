@@ -102,16 +102,22 @@ get '/rooms/:room_id' do
 		# websocketのリクエストじゃないときはrooms.erb返す
 		erb :rooms
 	else
+		 # websocketのリクエストだった時
 		request.websocket do |ws|
+			# websocketのコネクションが開かれたとき
 			ws.onopen do
 				# ws.send("Hello World!")
 				#message = JSON.parse(m)
+				# ハッシュにidをキーにして保存
 				settings.sockets[@id] << ws
 			end
 			ws.onmessage do |msg|
 				#@id = Room.first
 				EM.next_tick do
+					 # 同じidにつながってるクライアントすべてにメッセージ送信
 					settings.sockets[@id].each do |s|
+						# DBからuserとりだして，user.idとuser.nameとmsgをjsonの文字列にする
+						# 発言をDBに格納するのもココで！
 						s.send({ user: session[:screen_name],  body: msg }.to_json)
 					end
 				end
@@ -127,6 +133,7 @@ get '/rooms/:room_id' do
 				end
 =end
 			end
+			# websocketのコネクションが閉じられたとき
 			ws.onclose do
 				warn("websocket closed")
 				# socketをハッシュから削除する
