@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<title>chat</title>
+	</head>
+	<body>
+		<nav>
+			<div>
+				<div>
+					<a href="/">home</a>
+					<% if @session.has_key?(:screen_name) %>
+						<p>
+						Hello, <img src="<%= @session[:profile_image] %>">
+						<b><%= @session[:screen_name] %></b>
+						</p>
+
+						<p><a href="/logout">Logout</a></p>
+					<% else %>
+						<p><a href="/request_token"><img src="sign-in-with-twitter-gray.png"></a></p>
+						<h1>Please Sign in</h1>
+						<p><a href="/request_token">Twitter Login</a></p>
+					<% end %>
+				</div>
+				<ul>
+				</ul>
+			</div>
+		</nav>
+		<%= yield %>
+	</body>
+</html>

@@ -1,0 +1,14 @@
+<div>
+	<% if @session.has_key?(:screen_name) %>
+		<p>create room</p>
+		<form action="/create_room" method="post">
+			<input type="text" name="room_name">
+			<input type="submit" value="Room Create">
+			<% @room_name.each do |room_name|%>
+				<ul>
+					<li><a href="/rooms/<%= room_name.id %>"><%= room_name.roomname %></a></li>
+				</ul>
+			<% end %>
+		<% else %>
+		<% end %>
+</div>

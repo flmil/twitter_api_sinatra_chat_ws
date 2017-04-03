@@ -1,0 +1,48 @@
+<div>
+
+	<h1><%= @id.id %></h2>
+	<form id="form">
+		<input type="text" id="input" value="send a message"></input>
+		<input type="submit">
+	</form>
+	<div id="msgs"></div>
+	
+	<% @message.order('id DESC').each do |message| %>
+			<ul>
+				<li><%= message.username %></li>
+				<li><%= message.body.gsub("\n","<br>") %></li>
+			</ul>
+		<% end %>
+	
+</div>
+
+
+
+<script type="text/javascript">
+window.onload = function(){
+	(function(){
+		var show = function(el){
+			return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+		}(document.getElementById('msgs'));
+		var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+		ws.onopen    = function()  { show('websocket opened'); };
+		ws.onclose   = function()  { show('websocket closed'); }
+		ws.onmessage = function(m) {
+			// メッセージ文字列ををJSONとしてパースする
+			console.log(m);
+			data = JSON.parse(m.data);
+			// パース後のjsonからuser.nameとbodyを取り出し
+			show(data.user.name + ': ' + data.body);
+		};
+		var sender = function(f){
+			var input     = document.getElementById('input');
+			input.onclick = function(){ input.value = "" };
+			f.onsubmit    = function(){
+				ws.send(input.value);
+				input.value = "send a message";
+				return false;
+			}
+		}(document.getElementById('form'));
+	})();
+}
+</script>
