@@ -2,18 +2,18 @@
 
 	<h1><%= @id.id %></h2>
 	<form id="form">
-		<input type="text" id="input" value="send a message"></input>
+		<input type="text" id="input"></input>
 		<input type="submit">
 	</form>
 	<div id="msgs"></div>
-	
+
 	<% @message.order('id DESC').each do |message| %>
-			<ul>
-				<li><%= message.username %></li>
-				<li><%= message.body.gsub("\n","<br>") %></li>
-			</ul>
-		<% end %>
-	
+		<ul>
+			<li><%= message.username %></li>
+			<li><%= message.body.gsub("\n","<br>") %></li>
+		</ul>
+	<% end %>
+
 </div>
 
 
@@ -28,8 +28,8 @@ window.onload = function(){
 		ws.onopen    = function()  { show('websocket opened'); };
 		ws.onclose   = function()  { show('websocket closed'); }
 		ws.onmessage = function(m) {
-			// メッセージ文字列ををJSONとしてパースする
 			console.log(m);
+			// メッセージ文字列ををJSONとしてパースする
 			data = JSON.parse(m.data);
 			// パース後のjsonからuser.nameとbodyを取り出し
 			show(data.user.name + ': ' + data.body);
@@ -39,7 +39,8 @@ window.onload = function(){
 			input.onclick = function(){ input.value = "" };
 			f.onsubmit    = function(){
 				ws.send(input.value);
-				input.value = "send a message";
+				input.value = "";
+				//↑""の中に書いたものがinputの枠の中に送信後表示される
 				return false;
 			}
 		}(document.getElementById('form'));

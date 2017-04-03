@@ -101,12 +101,11 @@ get '/rooms/:room_id' do
 	if !request.websocket?
 		# websocketのリクエストじゃないときはrooms.erb返す
 		erb :rooms
-		# redirect "/rooms/#{params[:room_id]}"
-		#redirect back
 	else
 		request.websocket do |ws|
 			ws.onopen do
 				# ws.send("Hello World!")
+				#message = JSON.parse(m)
 				settings.sockets[@id] << ws
 			end
 			ws.onmessage do |msg|
