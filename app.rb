@@ -35,6 +35,7 @@ end
 
 get '/' do
 	@session = session
+	logger.info @session
 	@room_name = Room.order('id DESC').all
 	erb :index
 end
@@ -101,6 +102,7 @@ get '/rooms/:room_id' do
 	@session = session
 	logger.info @session
 	@id = Room.find_by(id: params[:room_id])
+	logger.info @id
 	@message = @id.messages
 
 	if !request.websocket?
@@ -130,7 +132,6 @@ get '/rooms/:room_id' do
 					settings.sockets[@id].each do |s|
 						# DBからuserとりだして，user.idとuser.nameとmsgをjsonの文字列にする
 						# 発言をDBに格納するのもココで！
-						# 発言をDBに格納するのもココで！
 						s.send({ user: session[:screen_name],  body: json['msg'] }.to_json)
 					end
 				end
@@ -156,15 +157,3 @@ get '/rooms/:room_id' do
 	end
 end
 
-
-post '/send/message' do
-	p params[:room_id]
-	p params[:body]
-	Message.create({
-		body: params[:body],
-		room_id: params[:room_id],
-		username: params[:username], 
-	})	
-	#redirect "/rooms/#{params[:room_id]}"
-	redirect back
-end
