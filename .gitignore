@@ -5,6 +5,8 @@ vendor/bundle
 
 *.db
 
+secret
+
 db/development.db
 
 .DS_Store

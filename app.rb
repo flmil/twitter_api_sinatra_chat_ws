@@ -20,8 +20,12 @@ set :sockets, Hash.new { |h, k| h[k] = [] }
 enable :sessions
 
 before do
-	key = ''
-	secret = ''
+	key = ENV['TWITTER_API_KEY']
+	secret = ENV['TWITTER_API_SECRET']
+	puts ENV['TWITTER_API_KEY']
+	puts ENV['TWITTER_API_SECRET']
+	puts key == 'X8Ep3WA00olcyNtQyLPnqAhuS'
+	puts secret == 'ceU55sziiWcl55GyuRgkPeFzmxX2afeBuamMiYb8qw17QXzRNV'
 	@twitter = TwitterOAuth::Client.new(
 		:consumer_key => key,
 		:consumer_secret => secret,
@@ -113,6 +117,7 @@ get '/rooms/:room_id' do
 				settings.sockets[@id] << ws
 			end
 			ws.onmessage do |msg|
+				logger.info msg
 				json = JSON.parse(msg)
 				Message.create(
 					body: json['msg'],
