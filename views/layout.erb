@@ -16,6 +16,8 @@
 						</p>
 
 						<p><a href="/logout">Logout</a></p>
+
+		<%= yield %>
 					<% else %>
 						<p><a href="/request_token"><img src="sign-in-with-twitter-gray.png"></a></p>
 						<h1>Please Sign in</h1>
@@ -26,6 +28,5 @@
 				</ul>
 			</div>
 		</nav>
-		<%= yield %>
 	</body>
 </html>

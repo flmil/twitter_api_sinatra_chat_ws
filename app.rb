@@ -95,14 +95,15 @@ end
 
 get '/rooms/:room_id' do
 	@session = session
+	logger.info @session
 	@id = Room.find_by(id: params[:room_id])
 	@message = @id.messages
-	
+
 	if !request.websocket?
 		# websocketのリクエストじゃないときはrooms.erb返す
 		erb :rooms
 	else
-		 # websocketのリクエストだった時
+		# websocketのリクエストだった時
 		request.websocket do |ws|
 			# websocketのコネクションが開かれたとき
 			ws.onopen do
@@ -112,13 +113,20 @@ get '/rooms/:room_id' do
 				settings.sockets[@id] << ws
 			end
 			ws.onmessage do |msg|
+				json = JSON.parse(msg)
+				Message.create(
+					body: json['msg'],
+					room_id: json['room_id'],
+					username: session[:screen_name] 
+				)	
 				#@id = Room.first
 				EM.next_tick do
-					 # 同じidにつながってるクライアントすべてにメッセージ送信
+					# 同じidにつながってるクライアントすべてにメッセージ送信
 					settings.sockets[@id].each do |s|
 						# DBからuserとりだして，user.idとuser.nameとmsgをjsonの文字列にする
 						# 発言をDBに格納するのもココで！
-						s.send({ user: session[:screen_name],  body: msg }.to_json)
+						# 発言をDBに格納するのもココで！
+						s.send({ user: session[:screen_name],  body: json['msg'] }.to_json)
 					end
 				end
 =begin
