@@ -102,6 +102,7 @@ get '/rooms/:room_id' do
 	@session = session
 	logger.info @session
 	@id = Room.find_by(id: params[:room_id])
+	#1しか入ってない
 	logger.info @id
 	@message = @id.messages
 

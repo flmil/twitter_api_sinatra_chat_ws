@@ -60,7 +60,7 @@ window.onload = function(){
 			var input     = document.getElementById('input');
 			input.onclick = function(){ input.value = "" };
 			f.onsubmit    = function(){
-				ws.send(`{"msg": "${input.value.replace(/\n/g, "\\n")}","room_id": 1}`);
+				ws.send(`{"msg": "${input.value.replace(/\n/g, "\\n")}","room_id": <%= @id.id %>}`);
 				input.value = "";
 				//↑""の中に書いたものがinputの枠の中に送信後表示される
 				return false;
